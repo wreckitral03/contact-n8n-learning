@@ -1,0 +1,15 @@
+# Node/Docker
+node_modules
+.env
+*.log
+dist
+.next
+pnpm-lock.yaml
+Dockerfile
+docker-compose.override.yml
+.vscode
+.idea
+
+# OS & editor artifacts
+.DS_Store
+*.swp
