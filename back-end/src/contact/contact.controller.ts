@@ -1,6 +1,7 @@
 type CreateContactWithMeta = CreateContactDto & { ip?: string; userAgent?: string };
 import { Controller, Post, Body, Req } from '@nestjs/common';
 import { Request } from 'express';
+import { Get } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { toZonedTime, format } from 'date-fns-tz';
@@ -39,4 +40,15 @@ export class ContactController {
       },
     };
   }
+
+  @Get('contact/summary')
+async summary() {
+  const summary = await this.contactService.getSummary();
+  return {
+    success: true,
+    message: 'Summary fetched',
+    data: summary,
+  };
+}
+
 }

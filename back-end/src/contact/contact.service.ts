@@ -30,4 +30,11 @@ export class ContactService {
       createdAt: formattedCreatedAt,
     };
   }
+
+async getSummary() {
+  const count = await this.prisma.contact.count();
+  return { totalContacts: count };
+}
+
+
 }
