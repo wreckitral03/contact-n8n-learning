@@ -1,6 +1,13 @@
 {
-	"dependencies": {
-		"prisma": "^6.8.2",
-		"@prisma/client": "^6.8.2"
-	}
+  "scripts": {
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "dev": "pnpm start:dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.8.2"
+  },
+  "devDependencies": {
+    "prisma": "^6.8.2"
+  }
 }

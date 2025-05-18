@@ -27,11 +27,11 @@ export function ContactForm() {
     setFormState({ status: "submitting", message: null })
 
     const formData = new FormData(event.currentTarget)
-    const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      message: formData.get("message"),
-    }
+const data = {
+  name: String(formData.get("name") || ""),
+  email: String(formData.get("email") || ""),
+  message: String(formData.get("message") || ""),
+}
 
     try {
       const response = await fetch("http://localhost:4000/api/contact", {

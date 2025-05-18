@@ -1,38 +1,29 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import axios from 'axios';
+import { Controller, Post, Body, Req } from '@nestjs/common';
+import { Request } from 'express';
+import { ContactService } from './contact.service';
+import { CreateContactDto } from './dto/create-contact.dto';
 
 @Controller('api')
 export class ContactController {
+  constructor(private readonly contactService: ContactService) {}
+
   @Post('contact')
-  async receiveContact(@Body() body: any) {
-    console.log("📩 Received form data:", body);
+  async receive(@Body() body: CreateContactDto, @Req() req: Request) {
+    console.log('📥 Received in controller:', body); // DEBUG LOG
 
-    try {
-      const response = await axios.post('http://localhost:5678/webhook/contact', body, {
-        headers: {
-          'x-api-key': 'ricky-secret-123',
-        },
-      });
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const userAgent = req.headers['user-agent'] || '';
 
-      console.log("✅ Forwarded to n8n. Response:", response.data);
+    const saved = await this.contactService.createContact({
+      ...body,
+      ip: Array.isArray(ip) ? ip[0] : ip,
+      userAgent,
+    });
 
-      return {
-        success: true,
-        message: 'Contact received and forwarded to automation',
-        data: response.data,
-      };
-    } catch (err) {
-      console.error("❌ Error sending to n8n:", err.message);
-      if (err.response?.data) {
-        console.error("n8n said:", err.response.data);
-      }
-
-      return {
-        success: false,
-        message: 'Failed to send to automation',
-        error: err.message,
-        ...(err.response?.data && { details: err.response.data }),
-      };
-    }
+    return {
+      success: true,
+      message: 'Saved to database',
+      data: saved,
+    };
   }
 }
